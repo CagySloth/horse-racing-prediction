@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
-from scrapers.list_dates import get_dates
-from scrapers.scrape_race import scrape_race
+from scrapers import get_dates, scrape_race
 
 # Calculate the start and end dates
 end_date = datetime.now()

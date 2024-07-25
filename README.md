@@ -6,15 +6,22 @@ Horse racing prediction using machine learning mechanics and betting strategies.
 # Set Up
 
 on linux:
-```python
+```sh
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirement.txt
 ```
 
+on windows:
+```sh
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
 in .env:
 ```
-TARGET_URL=<target url>
+TARGET_URL=http://101.78.205.36/racing/information/Chinese/Racing/LocalResults.aspx
 RESULTS_FOLDER=results/
 ```
 
