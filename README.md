@@ -15,4 +15,5 @@ pip install -r requirement.txt
 in .env:
 ```
 TARGET_URL=<target url>
+RESULTS_FOLDER=results/
 ```
