@@ -5,7 +5,8 @@ df = scrape_horse(
     "https://racing.hkjc.com/",
 )
 
-print(df)
+# df = flatten_df(df)
+print(f"{df=}")
 
-
+df.to_csv("horse_res.csv")
 # combine.append_row_to_csv("horse.csv", row)

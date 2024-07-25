@@ -31,7 +31,9 @@ def scrape_horse(
         print(full_url)
         soup = BeautifulSoup(response.content, "html.parser")
         selector = "#innerContent > div.commContent > div > table > tbody > tr"
-        # selector = "#innerContent > div.commContent > div:nth-child(1) > table.horseProfile"
+        selector = (
+            "#innerContent > div.commContent > div:nth-child(1) > table.horseProfile"
+        )
         table = soup.select_one(selector)
 
         if table is None:
