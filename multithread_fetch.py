@@ -1,5 +1,5 @@
-from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timedelta
 
 from scrapers.list_dates import get_dates
 from scrapers.scrape_race import scrape_race

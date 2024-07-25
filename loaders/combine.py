@@ -1,21 +1,22 @@
-import csv
-import os
 import fcntl
+import os
+
+import pandas as pd
 
 
-# Function to append a row to a CSV file safely
 def append_row_to_csv(file_path, row):
-    # Ensure the directory exists
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    with open(file_path, mode="a", newline="") as file:
-        # Acquire an exclusive lock on the file
+    if os.path.exists(file_path):
+        df = pd.read_csv(file_path)
+    else:
+        df = pd.DataFrame()
+
+    new_row_df = pd.DataFrame([row])
+    df = pd.concat([df, new_row_df], ignore_index=True)
+
+    with open(file_path, mode="w", newline="") as file:
         fcntl.flock(file, fcntl.LOCK_EX)
-
-        writer = csv.writer(file)
-        writer.writerow(row)
-
-        # Flush the internal buffer
+        df.to_csv(file, index=False)
         file.flush()
-        # Release the lock
         fcntl.flock(file, fcntl.LOCK_UN)
