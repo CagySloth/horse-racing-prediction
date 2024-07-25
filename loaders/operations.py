@@ -20,3 +20,7 @@ def append_row_to_csv(file_path, row):
         df.to_csv(file, index=False)
         file.flush()
         fcntl.flock(file, fcntl.LOCK_UN)
+
+
+def flatten_df(df: pd.DataFrame) -> pd.DataFrame:
+    return df.unstack().reset_index(drop=True).to_frame().T

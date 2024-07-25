@@ -3,6 +3,7 @@ pandas
 requests
 beautifulsoup4
 python-dotenv
+lxml
 
 # Development tools and type checkers
 ruff

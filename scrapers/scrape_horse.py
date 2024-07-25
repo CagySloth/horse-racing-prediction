@@ -4,11 +4,13 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from io import StringIO
+from typing import Optional
 
 load_dotenv()
 
 
-def scrape_horse(path_url: str, base_url: str = os.getenv("BASE_URL")) -> bool:
+def scrape_horse(path_url: str, base_url: str = os.getenv("BASE_URL")) -> Optional[pd.DataFrame]:
     """
     Extracts a table from the HTML content using a CSS selector and returns a DataFrame.
 
@@ -17,7 +19,7 @@ def scrape_horse(path_url: str, base_url: str = os.getenv("BASE_URL")) -> bool:
         base_url (str): The base URL of the website. Defaults to os.getenv("BASE_URL").
 
     Returns:
-        bool: Whether the fetching was successful.
+        Optional[pd.DataFrame]: df if fetching was successful, None if not.
     """
     print(base_url, path_url)
     try:
@@ -33,10 +35,9 @@ def scrape_horse(path_url: str, base_url: str = os.getenv("BASE_URL")) -> bool:
         if table is None:
             return False
 
-        df = pd.read_html(str(table))[0]
-        print(df)
+        html_str = str(table)
+        df = pd.read_html(StringIO(html_str))[0]
 
-        return True
+        return df
     except Exception as e:
         print(f"An error occurred: {e}")
-        return False
