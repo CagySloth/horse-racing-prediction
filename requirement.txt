@@ -1,6 +1,14 @@
+# Requirements for the main functionality
 pandas
 requests
 beautifulsoup4
 python-dotenv
+
+# Development tools and type checkers
 ruff
 mypy
+
+# Type stubs for type checking
+pandas-stubs
+types-requests
+types-beautifulsoup4

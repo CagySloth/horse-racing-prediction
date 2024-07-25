@@ -1,6 +1,7 @@
-import pandas as pd
 from datetime import datetime
-from typing import List, Dict
+from typing import Dict, List
+
+import pandas as pd
 
 
 def get_dates(start_date: str, end_date: str = datetime.now()) -> List[Dict[str, str]]:
@@ -16,22 +17,17 @@ def get_dates(start_date: str, end_date: str = datetime.now()) -> List[Dict[str,
         list: A list of dictionaries containing the date, weekday, and location.
     """
     # Generate date range
-    date_range = pd.date_range(start=start_date, end=end_date, freq='D')
-    
+    date_range = pd.date_range(start=start_date, end=end_date, freq="D")
+
     result = []
     for date in date_range:
         if date.weekday() == 2:  # Wednesday
-            result.append({
-                "date": date.strftime('%Y/%m/%d'),
-                "weekday": "weds",
-                "loc": "HV"
-            })
+            result.append(
+                {"date": date.strftime("%Y/%m/%d"), "weekday": "weds", "loc": "HV"}
+            )
         elif date.weekday() == 5:  # Saturday
-            result.append({
-                "date": date.strftime('%Y/%m/%d'),
-                "weekday": "sat",
-                "loc": "ST"
-            })
-    
-    return result
+            result.append(
+                {"date": date.strftime("%Y/%m/%d"), "weekday": "sat", "loc": "ST"}
+            )
 
+    return result
