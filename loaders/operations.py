@@ -12,7 +12,7 @@ else:
     import fcntl
 
 
-def append_row_to_csv(file_path, row):
+def append_row_to_csv(file_path: os.PathLike, row: pd.DataFrame) -> None:
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
     if os.path.exists(file_path):
@@ -20,8 +20,7 @@ def append_row_to_csv(file_path, row):
     else:
         df = pd.DataFrame()
 
-    new_row_df = pd.DataFrame([row])
-    df = pd.concat([df, new_row_df], ignore_index=True)
+    df = pd.concat([df, row], ignore_index=True)
 
     with open(file_path, mode="w", newline="") as file:
         if platform.system() == "Windows":
