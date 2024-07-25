@@ -49,12 +49,13 @@ def extract_and_save_table(
                 rows.append([column.text.strip() for column in columns])
 
     df = pd.DataFrame(rows)
-    
+
     if not df:
         return False
-    
+
     df.to_csv(file_path, index=False, header=False)
     return True
+
 
 def scrape(
     race_date: str = "2019/01/23", racecourse: str = "HV", race_no: str = "2"
@@ -83,14 +84,14 @@ def scrape(
 
     # First table
     table1_selector = "#innerContent > div.localResults.commContent.fontFam > div:nth-child(5) > table > tbody"
-    extract_and_save_table(
+    success1 = extract_and_save_table(
         html_content,
         table1_selector,
         os.path.join(results_folder_url, f"{file_name}.csv"),
     )
 
     # Second table
-    table2_selector = (
+    success2 = table2_selector = (
         "#innerContent > div.localResults.commContent.fontFam > div.race_tab > table"
     )
     extract_and_save_table(
@@ -99,8 +100,13 @@ def scrape(
         os.path.join(results_folder_url, f"{file_name}_bg.csv"),
     )
 
-    print(f"FETCHED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
-    return True
+    if success1 and success2:
+        print(f"FETCHED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
+        return True
+    else:
+        print(f"FAILED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
+        return False
+
 
 if __name__ == "__main__":
     scrape()
