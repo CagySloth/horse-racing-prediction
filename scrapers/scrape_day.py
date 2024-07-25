@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from dotenv import load_dotenv
 import os
-from typing import Optional, Dict
+from typing import Optional, Dict, Literal
 
 load_dotenv()
 
@@ -50,7 +50,7 @@ def extract_and_save_table(
 
     df = pd.DataFrame(rows)
 
-    if not df:
+    if df.empty:
         return False
 
     df.to_csv(file_path, index=False, header=False)
@@ -58,7 +58,7 @@ def extract_and_save_table(
 
 
 def scrape(
-    race_date: str = "2019/01/23", racecourse: str = "HV", race_no: str = "2"
+    race_date: str = "2019/01/23", racecourse: Literal["HV", "ST"] = "HV", race_no: str = "2"
 ) -> bool:
     """
     Main function to fetch HTML, extract tables, and save them as CSV files.
