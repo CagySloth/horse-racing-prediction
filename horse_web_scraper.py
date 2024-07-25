@@ -26,7 +26,7 @@ def fetch_html(base_url: str, params: Dict[str, str]) -> bytes:
 
 def extract_and_save_table(
     html_content: bytes, css_selector: str, file_path: str
-) -> None:
+) -> bool:
     """
     Extracts a table from the HTML content using a CSS selector and saves it as a CSV file.
 
@@ -34,7 +34,10 @@ def extract_and_save_table(
         html_content (bytes): The HTML content of the webpage.
         css_selector (str): The CSS selector to locate the table in the HTML.
         file_path (str): The file path where the CSV file will be saved.
+    Return:
+        bool: whether the fetching was successful
     """
+
     soup = BeautifulSoup(html_content, "html.parser")
     table = soup.select_one(css_selector)
 
@@ -46,12 +49,16 @@ def extract_and_save_table(
                 rows.append([column.text.strip() for column in columns])
 
     df = pd.DataFrame(rows)
-    df.to_csv(file_path, index=False, header=False)  # Remove the header
-
+    
+    if not df:
+        return False
+    
+    df.to_csv(file_path, index=False, header=False)
+    return True
 
 def scrape(
     race_date: str = "2019/01/23", racecourse: str = "HV", race_no: str = "2"
-) -> None:
+) -> bool:
     """
     Main function to fetch HTML, extract tables, and save them as CSV files.
 
@@ -59,7 +66,10 @@ def scrape(
         race_date (str): The date of the race in "YYYY/MM/DD" format.
         racecourse (str): The code of the racecourse.
         race_no (str): The race number.
+    Return:
+        bool: whether the fetching was successful
     """
+
     base_url: Optional[str] = os.getenv("BASE_URL")
     results_folder_url: Optional[str] = os.getenv("RESULTS_FOLDER")
     file_name: str = f"res_{race_date.replace('/', '-')}{racecourse}{race_no}"
@@ -89,6 +99,8 @@ def scrape(
         os.path.join(results_folder_url, f"{file_name}_bg.csv"),
     )
 
+    print(f"FETCHED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
+    return True
 
 if __name__ == "__main__":
     scrape()
