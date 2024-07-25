@@ -1,16 +1,18 @@
 import os
+from io import StringIO
+from typing import Optional
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from io import StringIO
-from typing import Optional
 
 load_dotenv()
 
 
-def scrape_horse(path_url: str, base_url: str = os.getenv("BASE_URL")) -> Optional[pd.DataFrame]:
+def scrape_horse(
+    path_url: str, base_url: str = os.getenv("BASE_URL")
+) -> Optional[pd.DataFrame]:
     """
     Extracts a table from the HTML content using a CSS selector and returns a DataFrame.
 

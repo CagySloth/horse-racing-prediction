@@ -1,6 +1,9 @@
 from scrapers.scrape_horse import scrape_horse
 
-df = scrape_horse("/racing/information/Chinese/Horse/Horse.aspx?HorseId=HK_2017_B402", "https://racing.hkjc.com/")
+df = scrape_horse(
+    "/racing/information/Chinese/Horse/Horse.aspx?HorseId=HK_2017_B402",
+    "https://racing.hkjc.com/",
+)
 
 print(df)
 
