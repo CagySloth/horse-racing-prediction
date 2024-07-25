@@ -109,7 +109,3 @@ def scrape_race(
     else:
         print(f"FAILED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
         return False
-
-
-if __name__ == "__main__":
-    scrape_race()
