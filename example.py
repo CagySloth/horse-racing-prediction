@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from scrapers.list_dates import get_dates
-from scrapers.scrape_race import scrape
+from scrapers.scrape_race import scrape_race
 
 # Calculate the start and end dates
 end_date = datetime.now()
@@ -15,5 +15,5 @@ for date in dates:
     flag = True
     i = 1
     while flag:
-        flag = scrape(date["date"], date["loc"], race_no=i)
+        flag = scrape_race(date["date"], date["loc"], race_no=str(i))
         i += 1

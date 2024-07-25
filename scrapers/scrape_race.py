@@ -58,7 +58,7 @@ def extract_and_save_table(
     return True
 
 
-def scrape(
+def scrape_race(
     race_date: str = "2019/01/23",
     racecourse: Literal["HV", "ST"] = "HV",
     race_no: str = "2",
@@ -112,4 +112,4 @@ def scrape(
 
 
 if __name__ == "__main__":
-    scrape()
+    scrape_race()

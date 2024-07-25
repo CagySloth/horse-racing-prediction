@@ -1,10 +1,9 @@
-from datetime import datetime
 from typing import Dict, List
 
 import pandas as pd
 
 
-def get_dates(start_date: str, end_date: str = datetime.now()) -> List[Dict[str, str]]:
+def get_dates(start_date: str, end_date: str) -> List[Dict[str, str]]:
     """
     Generate dates in the desired format for Wednesdays and Saturdays
     between start_date and end_date.
