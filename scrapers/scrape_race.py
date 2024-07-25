@@ -9,18 +9,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def fetch_html(base_url: str, params: Dict[str, str]) -> bytes:
+def fetch_html(race_url: str, params: Dict[str, str]) -> bytes:
     """
-    Fetch the HTML content from the given base URL with parameters.
+    Fetch the HTML content from the given race URL with parameters.
 
     Args:
-        base_url (str): The base URL of the webpage.
-        params (Dict[str, str]): The parameters to be appended to the base URL.
+        race_url (str): The race URL of the webpage.
+        params (Dict[str, str]): The parameters to be appended to the race URL.
 
     Returns:
         bytes: The HTML content of the webpage.
     """
-    response = requests.get(base_url, params=params)
+    response = requests.get(race_url, params=params)
     response.raise_for_status()
     return response.content
 
@@ -43,17 +43,25 @@ def extract_and_save_table(
     table = soup.select_one(css_selector)
 
     rows = []
+    urls = []
+
     if table:
         for row in table.find_all("tr"):
             columns = row.find_all("td")
             if columns:
-                rows.append([column.text.strip() for column in columns])
+                row_data = [column.text.strip() for column in columns]
+                rows.append(row_data)
+
+                # Extract URL from the third column (horse column) and append it to the df
+                link = columns[2].find("a", href=True)
+                urls.append(link["href"] if link else None)
 
     df = pd.DataFrame(rows)
 
     if df.empty:
         return False
 
+    df["URL"] = urls
     df.to_csv(file_path, index=False, header=False)
     return True
 
@@ -74,16 +82,16 @@ def scrape_race(
         bool: whether the fetching was successful
     """
 
-    base_url: Optional[str] = os.getenv("BASE_URL")
+    race_url: Optional[str] = os.getenv("RACE_URL")
     results_folder_url: Optional[str] = os.getenv("RESULTS_FOLDER")
     file_name: str = f"res_{race_date.replace('/', '-')}{racecourse}{race_no}"
 
-    if not (base_url and results_folder_url):
-        raise ValueError("BASE_URL or RESULTS_FOLDER environment variable is not set")
+    if not (race_url and results_folder_url):
+        raise ValueError("RACE_URL or RESULTS_FOLDER environment variable is not set")
 
     params = {"RaceDate": race_date, "Racecourse": racecourse, "RaceNo": race_no}
 
-    html_content = fetch_html(base_url, params)
+    html_content = fetch_html(race_url, params)
 
     # First table
     table1_selector = "#innerContent > div.localResults.commContent.fontFam > div:nth-child(5) > table > tbody"
