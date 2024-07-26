@@ -62,7 +62,10 @@ def extract_horse_values(csv_text) -> Tuple[int | float | str]:
         birthplace = ""
 
     # Calculate Top 3 %
-    win_rate = (gold + silver + bronze) / overall_matches
+    try:
+        win_rate = (gold + silver + bronze) / overall_matches
+    except Exception:
+        win_rate = 0
 
     return (
         prize_money,
