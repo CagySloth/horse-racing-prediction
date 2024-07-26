@@ -14,4 +14,5 @@ pandas-stubs
 types-requests
 types-beautifulsoup4
 
-# jupyter ot
+# jupyter notebook
+ipykernel
