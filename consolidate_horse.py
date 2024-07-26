@@ -33,7 +33,7 @@ def append_horses_info(path_url: str, output_file: os.PathLike = "horse_res.csv"
             "Bronze": [bronze],
             "TotalMatches": [total_matches],
             "WinRate": [win_rate],
-            "BirthPlace": [birthplace]
+            "BirthPlace": [birthplace],
         }
     )
 

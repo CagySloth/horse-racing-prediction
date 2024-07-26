@@ -19,8 +19,6 @@ def append_row_to_csv(file_path: os.PathLike, row: pd.DataFrame) -> None:
 
 
 def extract_horse_values(csv_text) -> Tuple[int | float | str]:
-
-
     prize_money_pattern = r"總獎金\*,:,\"\$([\d,]+)\""
     frating_pattern = r"最後評分,:,(\d+)"
     crating_pattern = r"現時評分,:,(\d+)"
