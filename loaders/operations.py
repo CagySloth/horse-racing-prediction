@@ -64,7 +64,7 @@ def extract_horse_values(csv_text) -> Tuple[int | float | str]:
     # Calculate Top 3 %
     try:
         win_rate = (gold + silver + bronze) / overall_matches
-    except Exception:
+    except ZeroDivisionError:
         win_rate = 0
 
     return (
