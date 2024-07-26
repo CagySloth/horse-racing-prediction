@@ -1,5 +1,5 @@
-from io import StringIO
 import os
+from io import StringIO
 
 import pandas as pd
 
@@ -18,20 +18,30 @@ def append_horses_info(path_url: str, output_file: os.PathLike = "horse_res.csv"
     df.to_csv(csv_buffer, index=False)
     csv_text = csv_buffer.getvalue()
 
-    prize_money, rating = extract_horse_values(csv_text=csv_text)
+    prize_money, rating, gold, silver, bronze, total_matches, win_rate, birthplace = (
+        extract_horse_values(csv_text=csv_text)
+    )
 
     # Creating a DataFrame with the same columns as expected in the CSV
-    new_row = pd.DataFrame({
-        "URL": [path_url],
-        "PrizeMoney": [prize_money],
-        "Rating": [rating]
-    })
+    new_row = pd.DataFrame(
+        {
+            "URL": [path_url],
+            "PrizeMoney": [prize_money],
+            "Rating": [rating],
+            "Gold": [gold],
+            "Silver": [silver],
+            "Bronze": [bronze],
+            "TotalMatches": [total_matches],
+            "WinRate": [win_rate],
+            "BirthPlace": [birthplace]
+        }
+    )
 
     append_row_to_csv(output_file, new_row)
 
 
-directory = 'results/'
-output_file = 'results/horse_res.csv'
+directory = "results/"
+output_file = "results/horse_res.csv"
 files = os.listdir(directory)
 
 existing_links = set()
@@ -42,13 +52,13 @@ if os.path.exists(output_file):
         existing_links = set(output_df.iloc[:, 0])
 
 for file in files:
-    if file.endswith('.csv') and not file.endswith('_bg.csv'):
+    if file.endswith(".csv") and not file.endswith("_bg.csv"):
         file_path = os.path.join(directory, file)
         df = pd.read_csv(file_path)
-        
+
         if len(df.columns) >= 13:
             links = df.iloc[:, 12]
-            
+
             for link in links:
                 if pd.notna(link):
                     if link not in existing_links:
@@ -56,7 +66,8 @@ for file in files:
                         append_horses_info(link, output_file)
                         existing_links.add(link)
                     else:
-                        print(f"Link {link} already exists in {output_file}")
+                        # print(f"Link {link} already exists in {output_file}")
+                        pass
                 else:
                     print("Empty")
 

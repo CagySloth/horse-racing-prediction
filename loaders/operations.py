@@ -4,8 +4,6 @@ from typing import Tuple
 
 import pandas as pd
 
-import os
-import pandas as pd
 
 def append_row_to_csv(file_path: os.PathLike, row: pd.DataFrame) -> None:
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -20,14 +18,14 @@ def append_row_to_csv(file_path: os.PathLike, row: pd.DataFrame) -> None:
     df.to_csv(file_path, index=False)
 
 
-def flatten_df(df: pd.DataFrame) -> pd.DataFrame:
-    return df.unstack().reset_index(drop=True).to_frame().T
+def extract_horse_values(csv_text) -> Tuple[int | float | str]:
 
 
-def extract_horse_values(csv_text) -> Tuple[int, int]:
     prize_money_pattern = r"總獎金\*,:,\"\$([\d,]+)\""
     frating_pattern = r"最後評分,:,(\d+)"
     crating_pattern = r"現時評分,:,(\d+)"
+    wins_pattern = r"冠-亞-季-總出賽次數\*,:,(\d+)-(\d+)-(\d+)-(\d+)"
+    birth_pattern = r"出生地,:,([^\n]+)|出生地 / 馬齡,:,([^\s/]+)"
 
     # Find prize money
     prize_money_match = re.search(prize_money_pattern, csv_text)
@@ -47,4 +45,34 @@ def extract_horse_values(csv_text) -> Tuple[int, int]:
         else:
             rating = 50
 
-    return prize_money, rating
+    # Find wins
+    wins_match = re.search(wins_pattern, csv_text)
+    if wins_match:
+        gold, silver, bronze, overall_matches = map(int, wins_match.groups())
+    else:
+        gold, silver, bronze, overall_matches = (0, 0, 0, 0)
+
+    # Find birthplace
+    birthplace_match = re.search(birth_pattern, csv_text)
+    if birthplace_match:
+        birthplace = (
+            birthplace_match.group(1)
+            if birthplace_match.group(1)
+            else birthplace_match.group(2)
+        )
+    else:
+        birthplace = ""
+
+    # Calculate Top 3 %
+    win_rate = (gold + silver + bronze) / overall_matches
+
+    return (
+        prize_money,
+        rating,
+        gold,
+        silver,
+        bronze,
+        overall_matches,
+        win_rate,
+        birthplace,
+    )

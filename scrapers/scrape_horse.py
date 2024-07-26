@@ -37,7 +37,7 @@ def scrape_horse(
         table = soup.select_one(selector)
 
         if table is None:
-            return False
+            return
 
         html_str = str(table)
         df = pd.read_html(StringIO(html_str))[0]
