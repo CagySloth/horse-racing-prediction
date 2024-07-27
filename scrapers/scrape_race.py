@@ -5,6 +5,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from typing import Optional, List
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ def fetch_html(race_url: str, params: Dict[str, str]) -> bytes:
 
 
 def extract_and_save_table(
-    html_content: bytes, css_selector: str, file_path: str
+    html_content: bytes, css_selector: str, file_path: str, headers: Optional[List[str]] = None, length_col: bool = False
 ) -> bool:
     """
     Extracts a table from the HTML content using a CSS selector and saves it as a CSV file.
@@ -35,6 +36,8 @@ def extract_and_save_table(
         html_content (bytes): The HTML content of the webpage.
         css_selector (str): The CSS selector to locate the table in the HTML.
         file_path (str): The file path where the CSV file will be saved.
+        headers (Optional[List[str]]): whether headers are provided.
+        length (bool): whether a col of length should be appended.
     Return:
         bool: whether the fetching was successful
     """
@@ -56,7 +59,16 @@ def extract_and_save_table(
                 link = columns[2].find("a", href=True)
                 urls.append(link["href"] if link else None)
 
-    df = pd.DataFrame(rows)
+    if headers:
+        df = pd.DataFrame(rows, columns=headers
+        )
+    else:
+        df = pd.DataFrame(rows)
+
+    # append length col if specified
+    if length_col:
+        df["Contenders"] = len(df)
+
 
     if df.empty:
         return False
@@ -99,6 +111,12 @@ def scrape_race(
         html_content,
         table1_selector,
         os.path.join(results_folder_url, f"{file_name}.csv"),
+        headers=[
+            "Position", "HorseNumber", "HorseName", "Jockey", "Trainer", "ActualWeight", "WeightedPosition", 
+            "GatePosition", "WinningMargin", "RunningPosition", "FinishTime", "WinOdds"
+            ],
+            length_col=True,
+        
     )
 
     # Second table
