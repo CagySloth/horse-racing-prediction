@@ -105,11 +105,13 @@ def scrape_race(
     success2 = table2_selector = (
         "#innerContent > div.localResults.commContent.fontFam > div.race_tab > table"
     )
-    extract_and_save_table(
-        html_content,
-        table2_selector,
-        os.path.join(results_folder_url, f"{file_name}_bg.csv"),
-    )
+    file_path = os.path.join(results_folder_url, f"{file_name}_bg.csv")
+    if not os.path.exists(file_path):
+        extract_and_save_table(
+            html_content,
+            table2_selector,
+            file_path,
+        )
 
     if success1 and success2:
         print(f"FETCHED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
