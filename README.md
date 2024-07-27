@@ -1,6 +1,12 @@
 # horse-racing-prediction
 Horse racing prediction using machine learning mechanics and betting strategies.
 
+## Data Consolidation Pipeline
+We are analyzing horse racing, in our case we want the final data to be every attempt of every horse in every race.
+Therefore we'll first fetch all the race results that took place in the last 15 years (11k). For each race, there will be 8-13 horses.
+Take their results, combine with that race's background information (what's the course like, wet or dry, length of race..)
+Finally for each data point we would also like to know the horse's stats. Therefore we'll have to crawl for the performance of the horse as well.
+Finally combining them all together into a super dataset
 
 
 # Set Up
