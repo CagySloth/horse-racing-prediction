@@ -23,12 +23,10 @@ def scrape_horse(
     Returns:
         Optional[pd.DataFrame]: df if fetching was successful, None if not.
     """
-    print(base_url, path_url)
     try:
         full_url = f"{base_url}{path_url}"
         response = requests.get(full_url)
         response.raise_for_status()
-        print(full_url)
         soup = BeautifulSoup(response.content, "html.parser")
         selector = "#innerContent > div.commContent > div > table > tbody > tr"
         selector = (
