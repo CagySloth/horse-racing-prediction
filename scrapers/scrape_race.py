@@ -1,11 +1,10 @@
 import os
-from typing import Dict, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from typing import Optional, List
 
 load_dotenv()
 
@@ -27,8 +26,12 @@ def fetch_html(race_url: str, params: Dict[str, str]) -> bytes:
 
 
 def extract_and_save_table(
-    html_content: bytes, css_selector: str, file_path: str, headers: Optional[List[str]] = None, length_col: bool = False
-) -> bool:
+    html_content: bytes,
+    css_selector: str,
+    file_path: str,
+    headers: Optional[List[str]] = None,
+    length_col: bool = False,
+) -> Optional[pd.DataFrame]:
     """
     Extracts a table from the HTML content using a CSS selector and saves it as a CSV file.
 
@@ -39,7 +42,7 @@ def extract_and_save_table(
         headers (Optional[List[str]]): whether headers are provided.
         length (bool): whether a col of length should be appended.
     Return:
-        bool: whether the fetching was successful
+        Optional[DataFrame]: whether the fetching was successful
     """
 
     soup = BeautifulSoup(html_content, "html.parser")
@@ -59,23 +62,22 @@ def extract_and_save_table(
                 link = columns[2].find("a", href=True)
                 urls.append(link["href"] if link else None)
 
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return
+
+    # append headers
     if headers:
-        df = pd.DataFrame(rows, columns=headers
-        )
-    else:
-        df = pd.DataFrame(rows)
+        df.columns = headers
 
     # append length col if specified
     if length_col:
         df["Contenders"] = len(df)
-
-
-    if df.empty:
-        return False
+        print("have legnth")
 
     df["URL"] = urls
-    df.to_csv(file_path, index=False, header=False)
-    return True
+    df.to_csv(file_path, index=False)
+    return df
 
 
 def scrape_race(
@@ -97,6 +99,7 @@ def scrape_race(
     race_url: Optional[str] = os.getenv("RACE_URL")
     results_folder_url: Optional[str] = os.getenv("RESULTS_FOLDER")
     file_name: str = f"res_{race_date.replace('/', '-')}{racecourse}{race_no}"
+    file_bg_name: str = f"res_{race_date.replace('/', '-')}{racecourse}_bg"
 
     if not (race_url and results_folder_url):
         raise ValueError("RACE_URL or RESULTS_FOLDER environment variable is not set")
@@ -105,25 +108,35 @@ def scrape_race(
 
     html_content = fetch_html(race_url, params)
 
-    # First table
+    # Race Table
     table1_selector = "#innerContent > div.localResults.commContent.fontFam > div:nth-child(5) > table > tbody"
     success1 = extract_and_save_table(
         html_content,
         table1_selector,
         os.path.join(results_folder_url, f"{file_name}.csv"),
         headers=[
-            "Position", "HorseNumber", "HorseName", "Jockey", "Trainer", "ActualWeight", "WeightedPosition", 
-            "GatePosition", "WinningMargin", "RunningPosition", "FinishTime", "WinOdds"
-            ],
-            length_col=True,
-        
+            "Position",
+            "HorseNumber",
+            "HorseName",
+            "Jockey",
+            "Trainer",
+            "ActWeightIncr",
+            "HorseWeight",
+            "GatePosition",
+            "WinningMargin",
+            "RunningPosition",
+            "FinishTime",
+            "WinOdds",
+        ],
+        length_col=True,
     )
+    print(f"HEADERS {success1.columns}")
 
-    # Second table
+    # Race Background Table
     success2 = table2_selector = (
         "#innerContent > div.localResults.commContent.fontFam > div.race_tab > table"
     )
-    file_path = os.path.join(results_folder_url, f"{file_name}_bg.csv")
+    file_path = os.path.join(results_folder_url, f"{file_bg_name}.csv")
     if not os.path.exists(file_path):
         extract_and_save_table(
             html_content,
@@ -131,7 +144,7 @@ def scrape_race(
             file_path,
         )
 
-    if success1 and success2:
+    if success1 is not None and success2 is not None:
         print(f"FETCHED date:{race_date}\tloc:{racecourse}\tround:{race_no}")
         return True
     else:
