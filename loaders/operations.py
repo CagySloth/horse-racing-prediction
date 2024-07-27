@@ -6,6 +6,14 @@ import pandas as pd
 
 
 def append_row_to_csv(file_path: os.PathLike, row: pd.DataFrame) -> None:
+    """
+    Append a row to a CSV file. If the file does not exist, it will be created.
+
+    Args:
+        file_path (os.PathLike): The path to the CSV file.
+        row (pd.DataFrame): The row to be appended to the CSV file.
+    """
+
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
     if os.path.exists(file_path):
@@ -19,6 +27,24 @@ def append_row_to_csv(file_path: os.PathLike, row: pd.DataFrame) -> None:
 
 
 def extract_horse_values(csv_text) -> Tuple[int | float | str]:
+    """
+    Extract horse-related values from the given CSV text.
+
+    Args:
+        csv_text (str): The text content of the CSV file.
+
+    Returns:
+        Tuple:
+            - prize_money (int): The total prize money the horse has won.
+            - rating (int): The official rating of the horse.
+            - gold (int): The number of first-place finishes.
+            - silver (int): The number of second-place finishes.
+            - bronze (int): The number of third-place finishes.
+            - overall_matches (int): The total number of races the horse has participated in.
+            - win_rate (float): The win rate of the horse (top 3 finishes divided by total races).
+            - birthplace (str): The birthplace of the horse.
+    """
+
     prize_money_pattern = r"總獎金\*,:,\"\$([\d,]+)\""
     frating_pattern = r"最後評分,:,(\d+)"
     crating_pattern = r"現時評分,:,(\d+)"

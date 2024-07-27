@@ -7,7 +7,21 @@ from loaders.operations import append_row_to_csv, extract_horse_values
 from scrapers.scrape_horse import scrape_horse
 
 
-def append_horses_info(path_url: str, output_file: os.PathLike = "horse_res.csv"):
+def append_horses_info(
+    path_url: str, output_file: os.PathLike = "horse_res.csv"
+) -> None:
+    """
+    Append horse information from a given URL to a CSV file.
+
+    This function scrapes horse information from a specified URL,
+    extracts relevant values, and appends the data to a output_file csv.
+
+    Args:
+        path_url (str): The URL to scrape horse information from.
+        output_file (Union[str, os.PathLike], optional):
+            The path to the final horse results CSV file. Defaults to "horse_res.csv".
+    """
+
     df: pd.DataFrame = scrape_horse(
         path_url=path_url,
         base_url="https://racing.hkjc.com/",
