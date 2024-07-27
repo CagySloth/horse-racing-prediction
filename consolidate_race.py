@@ -28,22 +28,34 @@ def append_race_res(path_url: str, output_file: os.PathLike = "results/final.csv
             }
         )
 
-
     # read the race horses info
     df = pd.read_csv(path_url, header=None)
     # append headers to df
     headers = [
-        "ID", "HorseNumber", "HorseName", "Jockey", "Position", "Trainer", "ActualWeight", 
-        "BodyWeight", "Draw", "DistanceToWinner", "RunningPositions", "FinishTime", "WinOdds", "HorseUrl"
+        "ID",
+        "HorseNumber",
+        "HorseName",
+        "Jockey",
+        "Position",
+        "Trainer",
+        "ActualWeight",
+        "BodyWeight",
+        "Draw",
+        "DistanceToWinner",
+        "RunningPositions",
+        "FinishTime",
+        "WinOdds",
+        "HorseUrl",
     ]
     df.columns = headers
     # Drop the 'RunningPositions' column for readability
-    df = df.drop(columns=['RunningPositions'])
-
+    df = df.drop(columns=["RunningPositions"])
 
     bg_row = get_bg_info(path_url=path_url)
     bg_rows = pd.concat([bg_row] * len(df), ignore_index=True)
 
-    result: pd.DataFrame = pd.concat([df.reset_index(drop=True), bg_rows.reset_index(drop=True)], axis=1)
+    result: pd.DataFrame = pd.concat(
+        [df.reset_index(drop=True), bg_rows.reset_index(drop=True)], axis=1
+    )
 
     append_row_to_csv(output_file, result)

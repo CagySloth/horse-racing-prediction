@@ -1,4 +1,3 @@
-from scrapers.scrape_horse import scrape_horse
 from scrapers.scrape_race import scrape_race
 
 assert scrape_race()
