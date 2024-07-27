@@ -73,7 +73,6 @@ def extract_and_save_table(
     # append length col if specified
     if length_col:
         df["Contenders"] = len(df)
-        print("have legnth")
 
     df["URL"] = urls
     df.to_csv(file_path, index=False)
@@ -130,7 +129,6 @@ def scrape_race(
         ],
         length_col=True,
     )
-    print(f"HEADERS {success1.columns}")
 
     # Race Background Table
     success2 = table2_selector = (

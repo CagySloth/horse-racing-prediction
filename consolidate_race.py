@@ -8,17 +8,17 @@ from loaders.operations import append_row_to_csv
 
 def append_race_res(path_url: str, output_file: os.PathLike = "results/final.csv"):
     def get_bg_info(path_url: str) -> pd.DataFrame:
-        bg_path_url = path_url.replace(".csv", "_bg.csv")
+        bg_path_url = re.sub(r"(\d+)\.csv$", "_bg.csv", path_url)
         df = pd.read_csv(bg_path_url, header=None)
 
         # Extract distance
         distance_pattern = re.compile(r"(\d+)米")
-        distance_match = distance_pattern.search(df.iat[2, 0])
+        distance_match = distance_pattern.search(df.iat[3, 0])
         distance = int(distance_match.group(1)) if distance_match else 1200
         # Extract course state
-        course_state = df.iat[2, 2] or "NA"
+        course_state = df.iat[3, 2] or "NA"
         # Extract course
-        course = df.iat[3, 2] or "NA"
+        course = df.iat[4, 2] or "NA"
 
         return pd.DataFrame(
             {
@@ -29,27 +29,10 @@ def append_race_res(path_url: str, output_file: os.PathLike = "results/final.csv
         )
 
     # read the race horses info
-    df = pd.read_csv(path_url, header=None)
-    # append headers to df
-    headers = [
-        "ID",
-        "HorseNumber",
-        "HorseName",
-        "Jockey",
-        "Position",
-        "Trainer",
-        "ActualWeight",
-        "BodyWeight",
-        "Draw",
-        "DistanceToWinner",
-        "RunningPositions",
-        "FinishTime",
-        "WinOdds",
-        "HorseUrl",
-    ]
-    df.columns = headers
-    # Drop the 'RunningPositions' column for readability
-    df = df.drop(columns=["RunningPositions"])
+    df = pd.read_csv(path_url)
+
+    # Drop the 'RunningPosition' column for readability
+    df = df.drop(columns=["RunningPosition"])
 
     bg_row = get_bg_info(path_url=path_url)
     bg_rows = pd.concat([bg_row] * len(df), ignore_index=True)
