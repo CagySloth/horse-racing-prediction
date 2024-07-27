@@ -65,10 +65,10 @@ RESULTS_FOLDER=results/
 ```
 
 ## Running The Code
-Just go to fetching.ipynb to run it manually. It will be in Traditional Chinese version, if you want english version youll have
+Just go to `fetching.ipynb` to run it manually. It will be in Traditional Chinese version, if you want english version youll have
 to adjust the params manually.
 If you want to get the full set of dataset, please reach out to us privately.
- 
+
 
 ## Linting
 After you code, before you push you should lint your code to keep the formatting readable and consistent
