@@ -17,3 +17,5 @@ types-beautifulsoup4
 # jupyter notebook
 ipykernel
 tqdm
+matplotlib
+seaborn
