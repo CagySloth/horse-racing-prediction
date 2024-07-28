@@ -19,3 +19,8 @@ ipykernel
 tqdm
 matplotlib
 seaborn
+
+# training
+scikit-learn
+xgboost
+torch
