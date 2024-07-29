@@ -3,6 +3,7 @@ pandas
 requests
 beautifulsoup4
 python-dotenv
+lxml
 
 # Development tools and type checkers
 ruff
@@ -12,3 +13,14 @@ mypy
 pandas-stubs
 types-requests
 types-beautifulsoup4
+
+# jupyter notebook
+ipykernel
+tqdm
+matplotlib
+seaborn
+
+# training
+scikit-learn
+xgboost
+torch
