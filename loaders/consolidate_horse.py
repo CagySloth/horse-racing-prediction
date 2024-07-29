@@ -4,7 +4,7 @@ from io import StringIO
 import pandas as pd
 
 from loaders.operations import append_row_to_csv, extract_horse_values
-from scrapers.scrape_horse import scrape_horse
+from scrapers import scrape_horse
 
 
 def append_horses_info(
